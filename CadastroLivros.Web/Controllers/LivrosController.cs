@@ -103,7 +103,9 @@ public class LivrosController : Controller
             foreach (string nomeAutor in autoresDistintos)
             {
                 var autor = new Autor { Nome = nomeAutor.Trim() };
-                int codAu = await _autorRepository.Inserir(autor);
+
+                var autorExistente = await _autorRepository.PesquisarPorNome(autor.Nome);
+                int codAu = autorExistente?.CodAu ?? await _autorRepository.Inserir(autor);
 
                 await _livroRepository.InserirAutorLivro(codL, codAu);
             }
@@ -118,7 +120,9 @@ public class LivrosController : Controller
             foreach (string descricaoAssunto in assuntosDistintos)
             {
                 var assunto = new Assunto { Descricao = descricaoAssunto };
-                int codAs = await _assuntoRepository.Inserir(assunto);
+
+                var assuntoExistente = await _assuntoRepository.PesquisarPorDescricao(assunto.Descricao);
+                int codAs = assuntoExistente?.CodAs ?? await _assuntoRepository.Inserir(assunto);
 
                 await _livroRepository.InserirAssuntoLivro(codL, codAs);
             }
@@ -218,8 +222,7 @@ public class LivrosController : Controller
 
         this.SetSuccessResult("Livro alterado com sucesso");
 
-        // return RedirectToAction("Index", "Home");
-        return View("Index", model);
+        return RedirectToAction("Index", "Home");
     }
 
     public async Task<IActionResult> Excluir(int codL)

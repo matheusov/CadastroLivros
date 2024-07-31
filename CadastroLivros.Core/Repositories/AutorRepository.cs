@@ -48,6 +48,25 @@ public class AutorRepository
         return result.AsList();
     }
 
+    public async Task<Autor?> PesquisarPorNome(string nome)
+    {
+        const string sql =
+            """
+            SELECT
+              a.CodAu
+              ,a.Nome
+            FROM Autor a
+            WHERE a.Nome LIKE @Nome
+            """;
+
+        var parameters = new DynamicParameters();
+        parameters.Add("@Nome", nome);
+
+        await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
+        var result = await connection.QueryFirstOrDefaultAsync<Autor>(sql, parameters);
+        return result;
+    }
+
     public async Task<int> Inserir(Autor autor)
     {
         const string sql =
