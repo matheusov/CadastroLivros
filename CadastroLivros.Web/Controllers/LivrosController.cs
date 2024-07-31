@@ -96,13 +96,12 @@ public class LivrosController : Controller
 
         if (model.Autores is not null)
         {
-            string[] autores = model.Autores.Split(",");
-
-            var autoresDistintos = autores.Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct();
+            var autoresDistintos = model.Autores.Split(",").Select(a => a.Trim())
+                .Where(a => !string.IsNullOrWhiteSpace(a)).Distinct();
 
             foreach (string nomeAutor in autoresDistintos)
             {
-                var autor = new Autor { Nome = nomeAutor.Trim() };
+                var autor = new Autor { Nome = nomeAutor };
 
                 var autorExistente = await _autorRepository.PesquisarPorNome(autor.Nome);
                 int codAu = autorExistente?.CodAu ?? await _autorRepository.Inserir(autor);
@@ -170,7 +169,9 @@ public class LivrosController : Controller
 
         await _livroRepository.Alterar(livro);
 
-        var autoresInformados = model.Autores!.Split(",").Select(a => a.Trim()).ToList();
+        var autoresInformados = model.Autores!.Split(",").Select(a => a.Trim())
+            .Where(a => !string.IsNullOrWhiteSpace(a)).Distinct().ToList();
+
         var autores = await _autorRepository.PesquisarPorLivro(livro.CodL);
 
         var autoresParaInserir = autoresInformados.Where(ai => !autores.Select(a => a.Nome).Contains(ai)).ToList();
@@ -179,7 +180,9 @@ public class LivrosController : Controller
         foreach (string nomeAutor in autoresParaInserir)
         {
             var autor = new Autor { Nome = nomeAutor };
-            int codAu = await _autorRepository.Inserir(autor);
+
+            var autorExistente = await _autorRepository.PesquisarPorNome(autor.Nome);
+            int codAu = autorExistente?.CodAu ?? await _autorRepository.Inserir(autor);
 
             await _livroRepository.InserirAutorLivro(livro.CodL, codAu);
         }
@@ -189,7 +192,9 @@ public class LivrosController : Controller
             await _livroRepository.ExcluirAutorLivro(livro.CodL, autor.CodAu);
         }
 
-        var assuntosInformados = model.Assuntos!.Split(",").Select(a => a.Trim()).ToList();
+        var assuntosInformados = model.Assuntos!.Split(",").Select(a => a.Trim())
+            .Where(a => !string.IsNullOrWhiteSpace(a)).Distinct().ToList();
+
         var assuntos = await _assuntoRepository.PesquisarPorLivro(livro.CodL);
 
         var assuntosParaInserir = assuntosInformados.Where(ai => !assuntos.Select(a => a.Descricao).Contains(ai)).ToList();
@@ -198,7 +203,9 @@ public class LivrosController : Controller
         foreach (string descricaoAssunto in assuntosParaInserir)
         {
             var assunto = new Assunto { Descricao = descricaoAssunto };
-            int codAs = await _assuntoRepository.Inserir(assunto);
+
+            var assuntoExistente = await _assuntoRepository.PesquisarPorDescricao(assunto.Descricao);
+            int codAs = assuntoExistente?.CodAs ?? await _assuntoRepository.Inserir(assunto);
 
             await _livroRepository.InserirAssuntoLivro(livro.CodL, codAs);
         }
