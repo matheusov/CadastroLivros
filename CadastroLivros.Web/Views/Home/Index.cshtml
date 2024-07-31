@@ -13,6 +13,8 @@
     @TempData["mensagem"]
 </div>
 
+<a asp-controller="Home" asp-action="BaixarRelatorio" class="btn btn-primary">Baixar relatório</a>
+
 <div class="card my-3">
     <div class="card-body">
         <h5 class="card-title">Livros</h5>
@@ -39,7 +41,7 @@
                     <td>@item.CodL</td>
                     <td>@item.Titulo</td>
                     <td>@item.Editora</td>
-                    <td>@item.Edicao</td>
+                    <td>@(item.Edicao)ª</td>
                     <td>@item.AnoPublicacao</td>
                     <td>
                         <a asp-controller="Livros" asp-action="Index" asp-route-id="@item.CodL" class="btn btn-sm btn-primary">Editar</a>

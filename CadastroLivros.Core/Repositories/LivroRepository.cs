@@ -290,4 +290,26 @@ public class LivroRepository
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
         await connection.ExecuteAsync(sql, parameters);
     }
+
+    public async Task<List<LivroAutor>> PesquisarLivroAutorRelatorio()
+    {
+        const string sql =
+            """
+            SELECT
+              la.CodAu
+              ,la.NomeAutor
+              ,la.CodL
+              ,la.TituloLivro
+              ,la.Editora
+              ,la.Edicao
+              ,la.AnoPublicacao
+              ,la.Assuntos
+            FROM uvwLivroAutor la
+            ORDER BY la.CodAu, la.CodL
+            """;
+
+        await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
+        var result = await connection.QueryAsync<LivroAutor>(sql);
+        return result.AsList();
+    }
 }

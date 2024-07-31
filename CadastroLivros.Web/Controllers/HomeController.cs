@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using CadastroLivros.Core.Repositories;
+using CadastroLivros.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using CadastroLivros.Web.Models;
 using CadastroLivros.Web.Models.Home;
@@ -12,18 +13,21 @@ public class HomeController : Controller
     private readonly LivroRepository _livroRepository;
     private readonly AutorRepository _autorRepository;
     private readonly AssuntoRepository _assuntoRepository;
+    private readonly RelatorioService _relatorioService;
 
     public HomeController(
         ILogger<HomeController> logger,
         LivroRepository livroRepository,
         AutorRepository autorRepository,
-        AssuntoRepository assuntoRepository
+        AssuntoRepository assuntoRepository,
+        RelatorioService relatorioService
     )
     {
         _logger = logger;
         _livroRepository = livroRepository;
         _autorRepository = autorRepository;
         _assuntoRepository = assuntoRepository;
+        _relatorioService = relatorioService;
     }
 
     public async Task<IActionResult> Index()
@@ -36,6 +40,12 @@ public class HomeController : Controller
         };
 
         return View(model);
+    }
+
+    public async Task<FileResult> BaixarRelatorio()
+    {
+        var arquivo = await _relatorioService.GerarRelatorio();
+        return File(arquivo, "application/pdf", "relatorio.pdf");
     }
 
     public IActionResult Privacy()
