@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadastroLivros.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadastroLivros.Application", "CadastroLivros.Application\CadastroLivros.Application.csproj", "{2C8C7882-56DA-468F-A11E-F5E2EFA18CB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadastroLivros.Tests", "CadastroLivros.Tests\CadastroLivros.Tests.csproj", "{1CD8625E-E110-4AC4-952B-ABC6678DFA80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{2C8C7882-56DA-468F-A11E-F5E2EFA18CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C8C7882-56DA-468F-A11E-F5E2EFA18CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C8C7882-56DA-468F-A11E-F5E2EFA18CB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CD8625E-E110-4AC4-952B-ABC6678DFA80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CD8625E-E110-4AC4-952B-ABC6678DFA80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CD8625E-E110-4AC4-952B-ABC6678DFA80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CD8625E-E110-4AC4-952B-ABC6678DFA80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
