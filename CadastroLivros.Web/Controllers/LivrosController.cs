@@ -97,7 +97,10 @@ public class LivrosController : Controller
         if (model.Autores is not null)
         {
             string[] autores = model.Autores.Split(",");
-            foreach (string nomeAutor in autores)
+
+            var autoresDistintos = autores.Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct();
+
+            foreach (string nomeAutor in autoresDistintos)
             {
                 var autor = new Autor { Nome = nomeAutor.Trim() };
                 int codAu = await _autorRepository.Inserir(autor);
@@ -109,9 +112,12 @@ public class LivrosController : Controller
         if (model.Assuntos is not null)
         {
             string[] assuntos = model.Assuntos.Split(",");
-            foreach (string descricaoAssunto in assuntos)
+
+            var assuntosDistintos = assuntos.Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct();
+
+            foreach (string descricaoAssunto in assuntosDistintos)
             {
-                var assunto = new Assunto { Descricao = descricaoAssunto.Trim() };
+                var assunto = new Assunto { Descricao = descricaoAssunto };
                 int codAs = await _assuntoRepository.Inserir(assunto);
 
                 await _livroRepository.InserirAssuntoLivro(codL, codAs);
