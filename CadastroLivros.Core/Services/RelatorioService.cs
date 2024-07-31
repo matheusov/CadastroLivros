@@ -20,6 +20,23 @@ public class RelatorioService
     {
         var model = await _livroRepository.PesquisarLivroAutorRelatorio();
 
+        foreach (var item in model)
+        {
+            if (item.Valores is null)
+                continue;
+
+            string[] paresValores = item.Valores.Split(',');
+            var valoresFormatados = paresValores.Select(x =>
+            {
+                string[] partes = x.Split(':');
+                string modo = partes[0];
+                string valor = double.Parse(partes[1].Replace('.', ',')).ToString("C");
+                return $"{modo}: {valor}";
+            });
+
+            item.Valores = string.Join(", ", valoresFormatados);
+        }
+
         var dadosAutores = model.GroupBy(x => x.CodAu).Select(x => new DadosAutor
         {
             CodAu = x.Key,
@@ -31,7 +48,8 @@ public class RelatorioService
                 Editora = y.Editora!,
                 Edicao = y.Edicao!.Value,
                 AnoPublicacao = y.AnoPublicacao!,
-                Assuntos = y.Assuntos
+                Assuntos = y.Assuntos,
+                Valores = y.Valores
             }).ToList()
         }).ToList();
 

@@ -1,4 +1,6 @@
-﻿CREATE VIEW IF NOT EXISTS uvwLivroAutor AS
+﻿DROP VIEW IF EXISTS uvwLivroAutor;
+
+CREATE VIEW IF NOT EXISTS uvwLivroAutor AS
 WITH LivroValores AS (
   SELECT
     l.CodL

@@ -304,6 +304,7 @@ public class LivroRepository
               ,la.Edicao
               ,la.AnoPublicacao
               ,la.Assuntos
+              ,la.Valores
             FROM uvwLivroAutor la
             ORDER BY la.CodAu, la.CodL
             """;

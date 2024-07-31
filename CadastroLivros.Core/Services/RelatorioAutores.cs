@@ -126,6 +126,12 @@ public class RelatorioAutores
                                 text.Span(livro.Assuntos);
                             });
 
+                            columnLivro.Item().Text(text =>
+                            {
+                                text.Span("Valores: ").Bold();
+                                text.Span(livro.Valores);
+                            });
+
                             columnLivro.Item().PaddingVertical(4).LineHorizontal(.5f);
                         });
                     }

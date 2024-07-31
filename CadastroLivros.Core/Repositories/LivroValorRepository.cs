@@ -1,4 +1,5 @@
-﻿using CadastroLivros.Core.Entities;
+﻿using System.Globalization;
+using CadastroLivros.Core.Entities;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
@@ -51,31 +52,6 @@ public class LivroValorRepository
         return result.AsList();
     }
 
-    public async Task<int> Inserir(LivroValor livroValor)
-    {
-        const string sql =
-            """
-            INSERT INTO LivroValor (
-              CodL
-              ,IdFormaCompra
-              ,Valor
-            )
-            VALUES (
-              @CodL
-              ,@IdFormaCompra
-              ,@Valor
-            );
-            """;
-
-        var parameters = new DynamicParameters();
-        parameters.Add("@CodL", livroValor.CodL);
-        parameters.Add("@IdFormaCompra", (int)livroValor.IdFormaCompra);
-        parameters.Add("@Valor", livroValor.Valor);
-
-        await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
-        return await connection.ExecuteAsync(sql, parameters);
-    }
-
     public async Task<int> InserirOuAtualizar(LivroValor livroValor)
     {
         const string sql =
@@ -97,7 +73,7 @@ public class LivroValorRepository
         var parameters = new DynamicParameters();
         parameters.Add("@CodL", livroValor.CodL);
         parameters.Add("@IdFormaCompra", (int)livroValor.IdFormaCompra);
-        parameters.Add("@Valor", livroValor.Valor);
+        parameters.Add("@Valor", livroValor.Valor?.ToString(CultureInfo.InvariantCulture));
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
         return await connection.ExecuteAsync(sql, parameters);

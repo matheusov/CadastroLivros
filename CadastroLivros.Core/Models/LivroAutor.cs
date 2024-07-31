@@ -10,4 +10,5 @@ public class LivroAutor
     public int? Edicao { get; set; }
     public string? AnoPublicacao { get; set; }
     public string? Assuntos { get; set; }
+    public string? Valores { get; set; }
 }

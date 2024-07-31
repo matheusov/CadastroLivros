@@ -20,4 +20,5 @@ public class DadosLivro
     public int Edicao { get; set; }
     public required string AnoPublicacao { get; set; }
     public string? Assuntos { get; set; }
+    public string? Valores { get; set; }
 }
