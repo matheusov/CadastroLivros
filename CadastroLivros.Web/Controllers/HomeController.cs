@@ -1,21 +1,41 @@
 using System.Diagnostics;
+using CadastroLivros.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using CadastroLivros.Web.Models;
+using CadastroLivros.Web.Models.Home;
 
 namespace CadastroLivros.Web.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly LivroRepository _livroRepository;
+    private readonly AutorRepository _autorRepository;
+    private readonly AssuntoRepository _assuntoRepository;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(
+        ILogger<HomeController> logger,
+        LivroRepository livroRepository,
+        AutorRepository autorRepository,
+        AssuntoRepository assuntoRepository
+    )
     {
         _logger = logger;
+        _livroRepository = livroRepository;
+        _autorRepository = autorRepository;
+        _assuntoRepository = assuntoRepository;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var model = new HomeControllerViewModel
+        {
+            Livros = await _livroRepository.Pesquisar(),
+            Autores = await _autorRepository.Pesquisar(),
+            Assuntos = await _assuntoRepository.Pesquisar()
+        };
+
+        return View(model);
     }
 
     public IActionResult Privacy()

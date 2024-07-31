@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS Livro_Autor (
+  Livro_CodL INTEGER NOT NULL,
+  Autor_CodAu INTEGER NOT NULL,
+  CONSTRAINT Livro_Autor_FKIndex1 FOREIGN KEY (Livro_CodL) REFERENCES Livro (CodL),
+  CONSTRAINT Livro_Autor_FKIndex2 FOREIGN KEY (Autor_CodAu) REFERENCES Autor (CodAu)
+);

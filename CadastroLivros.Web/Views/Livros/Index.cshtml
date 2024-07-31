@@ -1,0 +1,79 @@
+﻿@model CadastroLivros.Web.Models.Livros.LivrosControllerViewModel
+
+@{
+    ViewData["Title"] = "Cadastrar livros";
+    string actionName = Model.CodL is null ? "Inserir" : "Editar";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Cadastro de Livros</h1>
+</div>
+
+<section class="my-3 container">
+    <form method="post" asp-action="@actionName">
+
+        @if (Model.CodL.HasValue)
+        {
+            <input type="hidden" asp-for="CodL"/>
+        }
+
+        <div class="mb-3">
+            <label class="form-label" asp-for="Titulo"></label>
+            <input class="form-control" asp-for="Titulo"/>
+            <span asp-validation-for="Titulo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" asp-for="Editora"></label>
+            <input class="form-control" asp-for="Editora"/>
+            <span asp-validation-for="Editora" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" asp-for="Edicao"></label>
+            <input class="form-control" asp-for="Edicao"/>
+            <span asp-validation-for="Edicao" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" asp-for="AnoPublicacao"></label>
+            <input class="form-control" asp-for="AnoPublicacao"/>
+            <span asp-validation-for="AnoPublicacao" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" asp-for="Autores"></label>
+            <input class="form-control" asp-for="Autores"/>
+            <span asp-validation-for="Autores" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" asp-for="Assuntos"></label>
+            <input class="form-control" asp-for="Assuntos"/>
+            <span asp-validation-for="Assuntos" class="text-danger"></span>
+        </div>
+
+        @if (Model.CodL is null)
+        {
+            <button type="submit" class="btn btn-primary">Inserir</button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        }
+
+    </form>
+
+    @if (Model.CodL.HasValue)
+    {
+        <form method="post" asp-action="Excluir">
+            <input type="hidden" asp-for="CodL"/>
+            <button type="submit" class="btn btn-danger">Excluir</button>
+        </form>
+    }
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

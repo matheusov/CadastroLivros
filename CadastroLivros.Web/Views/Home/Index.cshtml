@@ -1,8 +1,111 @@
-﻿@{
-  ViewData["Title"] = "Home Page";
+﻿@model CadastroLivros.Web.Models.Home.HomeControllerViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-  <h1 class="display-4">Welcome</h1>
-  <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Cadastro de Livros</h1>
+</div>
+
+<div class="alert @(TempData["sucesso"] as bool? == false ? "alert-warning" : "alert-success") alert-dismissible fade show mt-2" role="alert"
+     style=@(string.IsNullOrEmpty(TempData["mensagem"] as string) ? "display:none" : "")>
+    @TempData["mensagem"]
+</div>
+
+<div class="card my-3">
+    <div class="card-body">
+        <h5 class="card-title">Últimos livros</h5>
+
+        <div class="my-3">
+            <a asp-controller="Livros" asp-action="Index" class="btn btn-primary">Adicionar novo livro</a>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Título</th>
+                <th>Editora</th>
+                <th>Edição</th>
+                <th>Ano</th>
+                <th>Ação</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Livros)
+            {
+                <tr>
+                    <td>@item.CodL</td>
+                    <td>@item.Titulo</td>
+                    <td>@item.Editora</td>
+                    <td>@item.Edicao</td>
+                    <td>@item.AnoPublicacao</td>
+                    <td>
+                        <a asp-controller="Livros" asp-action="Index" asp-route-id="@item.CodL" class="btn btn-sm btn-primary">Editar</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="card my-3">
+    <div class="card-body">
+        <h5 class="card-title">Últimos autores</h5>
+
+        <div class="my-3">
+            <a asp-controller="Autores" asp-action="Index" class="btn btn-primary">Adicionar novo autor</a>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Autores)
+            {
+                <tr>
+                    <td>@item.CodAu</td>
+                    <td>@item.Nome</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="card my-3">
+    <div class="card-body">
+        <h5 class="card-title">Últimos assuntos</h5>
+
+        <div class="my-3">
+            <a asp-controller="Assuntos" asp-action="Index" class="btn btn-primary">Adicionar novo assunto</a>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Assunto</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Assuntos)
+            {
+                <tr>
+                    <td>@item.CodAs</td>
+                    <td>@item.Descricao</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
 </div>

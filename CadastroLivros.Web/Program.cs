@@ -1,7 +1,17 @@
+using CadastroLivros.Core;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddOptions<AppSettings>()
+    .Bind(builder.Configuration)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+var appSettings = builder.Configuration.Get<AppSettings>()!;
+
+builder.Services
+    .AddCore(appSettings)
+    .AddControllersWithViews();
 
 var app = builder.Build();
 
