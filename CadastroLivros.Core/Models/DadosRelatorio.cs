@@ -2,7 +2,7 @@
 
 public class DadosRelatorio
 {
-    public required List<DadosAutor> DadosAutor { get; set; }
+    public List<DadosAutor> DadosAutor { get; set; } = [];
 }
 
 public class DadosAutor
