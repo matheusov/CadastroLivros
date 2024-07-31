@@ -1,4 +1,5 @@
 using CadastroLivros.Core.Entities;
+using CadastroLivros.Core.Enums;
 using CadastroLivros.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using CadastroLivros.Web.Models.Livros;
@@ -12,18 +13,21 @@ public class LivrosController : Controller
     private readonly LivroRepository _livroRepository;
     private readonly AutorRepository _autorRepository;
     private readonly AssuntoRepository _assuntoRepository;
+    private readonly LivroValorRepository _livroValorRepository;
 
     public LivrosController(
         ILogger<LivrosController> logger,
         LivroRepository livroRepository,
         AutorRepository autorRepository,
-        AssuntoRepository assuntoRepository
+        AssuntoRepository assuntoRepository,
+        LivroValorRepository livroValorRepository
     )
     {
         _logger = logger;
         _livroRepository = livroRepository;
         _autorRepository = autorRepository;
         _assuntoRepository = assuntoRepository;
+        _livroValorRepository = livroValorRepository;
     }
 
     [HttpGet("Livros/{id:int?}")]
@@ -31,8 +35,11 @@ public class LivrosController : Controller
     {
         var model = new LivrosControllerViewModel();
 
+        var formasCompra = Enum.GetValues<FormaCompra>().Select(f => new FormaCompraViewModel { FormaCompra = f }).ToList();
+
         if (id is null or 0)
         {
+            model.FormasCompra = formasCompra;
             return View(model);
         }
 
@@ -54,6 +61,18 @@ public class LivrosController : Controller
 
         var assuntos = await _assuntoRepository.PesquisarPorLivro(livro.CodL);
         model.Assuntos = string.Join(", ", assuntos.Select(a => a.Descricao));
+
+        var livroValores = await _livroValorRepository.PesquisarPorLivro(livro.CodL);
+        foreach (var livroValor in livroValores)
+        {
+            var formaCompra = formasCompra.FirstOrDefault(f => f.FormaCompra == livroValor.IdFormaCompra);
+            if (formaCompra is not null)
+            {
+                formaCompra.Valor = livroValor.Valor;
+            }
+        }
+
+        model.FormasCompra = formasCompra;
 
         return View(model);
     }
@@ -97,6 +116,18 @@ public class LivrosController : Controller
 
                 await _livroRepository.InserirAssuntoLivro(codL, codAs);
             }
+        }
+
+        foreach (var formaCompraViewModel in model.FormasCompra)
+        {
+            var livroValor = new LivroValor
+            {
+                CodL = codL,
+                IdFormaCompra = formaCompraViewModel.FormaCompra,
+                Valor = formaCompraViewModel.Valor
+            };
+
+            await _livroValorRepository.InserirOuAtualizar(livroValor);
         }
 
         this.SetSuccessResult("Livro inserido com sucesso");
@@ -167,9 +198,22 @@ public class LivrosController : Controller
             await _livroRepository.ExcluirAssuntoLivro(livro.CodL, assunto.CodAs);
         }
 
+        foreach (var pd in model.FormasCompra)
+        {
+            var livroValor = new LivroValor
+            {
+                CodL = livro.CodL,
+                IdFormaCompra = pd.FormaCompra,
+                Valor = pd.Valor
+            };
+
+            await _livroValorRepository.InserirOuAtualizar(livroValor);
+        }
+
         this.SetSuccessResult("Livro alterado com sucesso");
 
-        return RedirectToAction("Index", "Home");
+        // return RedirectToAction("Index", "Home");
+        return View("Index", model);
     }
 
     public async Task<IActionResult> Excluir(int codL)

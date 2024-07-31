@@ -1,4 +1,5 @@
-﻿@model CadastroLivros.Web.Models.Livros.LivrosControllerViewModel
+﻿@using CadastroLivros.Core.Utilities
+@model CadastroLivros.Web.Models.Livros.LivrosControllerViewModel
 
 @{
     ViewData["Title"] = "Cadastrar livros";
@@ -53,6 +54,35 @@
             <span asp-validation-for="Assuntos" class="text-danger"></span>
         </div>
 
+        <div class="card my-3">
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Forma de compra</th>
+                        <th>Valor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for (int i = 0; i < Model.FormasCompra.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.FormasCompra[i].FormaCompra.GetDisplayName()</td>
+                            <td>
+                                <input type="hidden" asp-for="@Model.FormasCompra[i].FormaCompra"/>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" asp-for="@Model.FormasCompra[i].Valor" class="form-control"/>
+                                </div>
+                                <span asp-validation-for="FormasCompra[i].Valor" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         @if (Model.CodL is null)
         {
             <button type="submit" class="btn btn-primary">Inserir</button>
@@ -74,6 +104,6 @@
 
 </section>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
-}
+@* @section Scripts { *@
+@*     <partial name="_ValidationScriptsPartial"/> *@
+@* } *@

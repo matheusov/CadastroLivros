@@ -1,0 +1,4 @@
+﻿CREATE TABLE IF NOT EXISTS FormaCompra (
+  IdFormaCompra INTEGER PRIMARY KEY CONSTRAINT FormaCompra_PK,
+  Descricao VARCHAR(40) NOT NULL
+);

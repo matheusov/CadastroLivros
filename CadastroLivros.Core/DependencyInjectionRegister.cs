@@ -10,6 +10,7 @@ public static class DependencyInjectionRegister
         services.AddScoped<LivroRepository>();
         services.AddScoped<AutorRepository>();
         services.AddScoped<AssuntoRepository>();
+        services.AddScoped<LivroValorRepository>();
 
         return services;
     }

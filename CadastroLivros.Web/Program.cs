@@ -1,3 +1,4 @@
+using System.Globalization;
 using CadastroLivros.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,10 @@ builder.Services
     .AddControllersWithViews();
 
 var app = builder.Build();
+
+var defaultCulture = new CultureInfo("pt-BR"); // Cultura brasileira
+CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
+CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
