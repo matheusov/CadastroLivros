@@ -18,9 +18,9 @@ public class AutorRepository
     {
         const string sql =
             """
-            SELECT CodAu, Nome
-            FROM Autor
-            ORDER BY Nome
+            SELECT a.CodAu, a.Nome
+            FROM Autor a
+            ORDER BY a.Nome
             """;
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
@@ -46,6 +46,25 @@ public class AutorRepository
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
         var result = await connection.QueryAsync<Autor>(sql, parameters);
         return result.AsList();
+    }
+
+    public async Task<Autor?> PesquisarPorId(int id)
+    {
+        const string sql =
+            """
+            SELECT
+              a.CodAu
+              ,a.Nome
+            FROM Autor a
+            WHERE a.CodAu = @CodAu
+            """;
+
+        var parameters = new DynamicParameters();
+        parameters.Add("@CodAu", id);
+
+        await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
+        var result = await connection.QueryFirstOrDefaultAsync<Autor>(sql, parameters);
+        return result;
     }
 
     public async Task<Autor?> PesquisarPorNome(string nome)

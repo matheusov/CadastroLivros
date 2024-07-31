@@ -15,7 +15,7 @@
 
 <div class="card my-3">
     <div class="card-body">
-        <h5 class="card-title">Últimos livros</h5>
+        <h5 class="card-title">Livros</h5>
 
         <div class="my-3">
             <a asp-controller="Livros" asp-action="Index" class="btn btn-primary">Adicionar novo livro</a>
@@ -54,17 +54,14 @@
 
 <div class="card my-3">
     <div class="card-body">
-        <h5 class="card-title">Últimos autores</h5>
-
-        <div class="my-3">
-            <a asp-controller="Autores" asp-action="Index" class="btn btn-primary">Adicionar novo autor</a>
-        </div>
+        <h5 class="card-title">Autores</h5>
 
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>Código</th>
                 <th>Nome</th>
+                <th>Ação</th>
             </tr>
             </thead>
             <tbody>
@@ -73,6 +70,9 @@
                 <tr>
                     <td>@item.CodAu</td>
                     <td>@item.Nome</td>
+                    <td>
+                        <a asp-controller="Autores" asp-action="Index" asp-route-id="@item.CodAu" class="btn btn-sm btn-primary">Ver livros</a>
+                    </td>
                 </tr>
             }
             </tbody>
@@ -83,17 +83,14 @@
 
 <div class="card my-3">
     <div class="card-body">
-        <h5 class="card-title">Últimos assuntos</h5>
-
-        <div class="my-3">
-            <a asp-controller="Assuntos" asp-action="Index" class="btn btn-primary">Adicionar novo assunto</a>
-        </div>
+        <h5 class="card-title">Assuntos</h5>
 
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>Código</th>
-                <th>Assunto</th>
+                <th>Descrição</th>
+                <th>Ação</th>
             </tr>
             </thead>
             <tbody>
@@ -102,6 +99,9 @@
                 <tr>
                     <td>@item.CodAs</td>
                     <td>@item.Descricao</td>
+                    <td>
+                        <a asp-controller="Assuntos" asp-action="Index" asp-route-id="@item.CodAs" class="btn btn-sm btn-primary">Ver livros</a>
+                    </td>
                 </tr>
             }
             </tbody>

@@ -1,0 +1,46 @@
+﻿@model CadastroLivros.Web.Models.Assuntos.AssuntosControllerViewModel
+
+@{
+    ViewData["Title"] = "Assunto";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Livros por assunto</h1>
+    <h2 class="display-3">@Model.Assunto.Descricao</h2>
+</div>
+
+<section class="my-3 container">
+
+    <div class="card my-3">
+        <div class="card-body">
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>Títulos</th>
+                    <th>Editora</th>
+                    <th>Edição</th>
+                    <th>Ano de publicação</th>
+                    <th>Autores</th>
+                    <th>Assuntos</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for (int i = 0; i < Model.Livros.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Livros" asp-action="Index" asp-route-id="@Model.Livros[i].CodL">@Model.Livros[i].Titulo</a>
+                        </td>
+                        <td>@Model.Livros[i].Editora</td>
+                        <td>@Model.Livros[i].Edicao</td>
+                        <td>@Model.Livros[i].AnoPublicacao</td>
+                        <td>@Model.Livros[i].Autores</td>
+                        <td>@Model.Livros[i].Assuntos</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>

@@ -1,4 +1,5 @@
 ﻿using CadastroLivros.Core.Entities;
+using CadastroLivros.Core.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
@@ -19,13 +20,13 @@ public class LivroRepository
         const string sql =
             """
             SELECT
-              CodL
-              ,Titulo
-              ,Editora
-              ,Edicao
-              ,AnoPublicacao
-            FROM Livro
-            ORDER BY CodL DESC
+              l.CodL
+              ,l.Titulo
+              ,l.Editora
+              ,l.Edicao
+              ,l.AnoPublicacao
+            FROM Livro l
+            ORDER BY l.CodL DESC
             """;
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
@@ -38,13 +39,13 @@ public class LivroRepository
         const string sql =
             """
             SELECT
-              CodL
-              ,Titulo
-              ,Editora
-              ,Edicao
-              ,AnoPublicacao
-            FROM Livro
-            WHERE CodL = @CodL
+              l.CodL
+              ,l.Titulo
+              ,l.Editora
+              ,l.Edicao
+              ,l.AnoPublicacao
+            FROM Livro l
+            WHERE l.CodL = @CodL
             """;
 
         var parameters = new DynamicParameters();
@@ -53,6 +54,106 @@ public class LivroRepository
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
         var result = await connection.QueryFirstOrDefaultAsync<Livro>(sql, parameters);
         return result;
+    }
+
+    public async Task<List<LivroComAutorEAssunto>> PesquisarPorAutor(int codAu)
+    {
+        const string sql =
+            """
+            WITH AutoresPorLivro AS (
+              SELECT
+                l.CodL
+                ,GROUP_CONCAT(au.Nome, ', ') AS Autores
+              FROM Livro l
+              INNER JOIN Livro_Autor lau ON lau.Livro_CodL = l.CodL
+              INNER JOIN Autor au ON au.CodAu = lau.Autor_CodAu
+              GROUP BY l.CodL
+            )
+            , AssuntosPorLivro AS (
+            SELECT
+              l.CodL
+              ,GROUP_CONCAT(DISTINCT ass.Descricao) AS Assuntos
+              FROM Livro l
+              INNER JOIN Livro_Assunto las ON las.Livro_CodL = l.CodL
+              INNER JOIN Assunto ass ON ass.CodAs = las.Assunto_CodAs
+              GROUP BY l.CodL
+            )
+            SELECT
+              l.CodL
+              ,l.Titulo
+              ,l.Editora
+              ,l.Edicao
+              ,l.AnoPublicacao
+              ,aupl.Autores
+              ,aspl.Assuntos
+            FROM Livro l
+            LEFT JOIN AutoresPorLivro aupl ON aupl.CodL = l.CodL
+            LEFT JOIN AssuntosPorLivro aspl ON aspl.CodL = l.CodL
+            WHERE EXISTS (
+              SELECT 1
+              FROM Livro_Autor lau
+              WHERE lau.Livro_CodL = l.CodL
+              AND lau.Autor_CodAu = @CodAu
+            )
+            ORDER BY l.CodL
+            """;
+
+        var parameters = new DynamicParameters();
+        parameters.Add("@CodAu", codAu);
+
+        await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
+        var result = await connection.QueryAsync<LivroComAutorEAssunto>(sql, parameters);
+        return result.AsList();
+    }
+
+    public async Task<List<LivroComAutorEAssunto>> PesquisarPorAssunto(int codAs)
+    {
+        const string sql =
+            """
+            WITH AutoresPorLivro AS (
+              SELECT
+                l.CodL
+                ,GROUP_CONCAT(au.Nome, ', ') AS Autores
+              FROM Livro l
+              INNER JOIN Livro_Autor lau ON lau.Livro_CodL = l.CodL
+              INNER JOIN Autor au ON au.CodAu = lau.Autor_CodAu
+              GROUP BY l.CodL
+            )
+            , AssuntosPorLivro AS (
+            SELECT
+              l.CodL
+              ,GROUP_CONCAT(DISTINCT ass.Descricao) AS Assuntos
+              FROM Livro l
+              INNER JOIN Livro_Assunto las ON las.Livro_CodL = l.CodL
+              INNER JOIN Assunto ass ON ass.CodAs = las.Assunto_CodAs
+              GROUP BY l.CodL
+            )
+            SELECT
+              l.CodL
+              ,l.Titulo
+              ,l.Editora
+              ,l.Edicao
+              ,l.AnoPublicacao
+              ,aupl.Autores
+              ,aspl.Assuntos
+            FROM Livro l
+            LEFT JOIN AutoresPorLivro aupl ON aupl.CodL = l.CodL
+            LEFT JOIN AssuntosPorLivro aspl ON aspl.CodL = l.CodL
+            WHERE EXISTS (
+              SELECT 1
+              FROM Livro_Assunto las
+              WHERE las.Livro_CodL = l.CodL
+                AND las.Assunto_CodAs = @CodAs
+            )
+            ORDER BY l.CodL
+            """;
+
+        var parameters = new DynamicParameters();
+        parameters.Add("@CodAs", codAs);
+
+        await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
+        var result = await connection.QueryAsync<LivroComAutorEAssunto>(sql, parameters);
+        return result.AsList();
     }
 
     public async Task<int> Inserir(Livro livro)

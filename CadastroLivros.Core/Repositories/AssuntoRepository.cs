@@ -48,6 +48,25 @@ public class AssuntoRepository
         return result.AsList();
     }
 
+    public async Task<Assunto?> PesquisarPorId(int id)
+    {
+        const string sql =
+            """
+            SELECT
+              a.CodAs
+              ,a.Descricao
+            FROM Assunto a
+            WHERE a.CodAs = @CodAs
+            """;
+
+        var parameters = new DynamicParameters();
+        parameters.Add("@CodAs", id);
+
+        await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
+        var result = await connection.QueryFirstOrDefaultAsync<Assunto>(sql, parameters);
+        return result;
+    }
+
     public async Task<Assunto?> PesquisarPorDescricao(string descricao)
     {
         const string sql =
