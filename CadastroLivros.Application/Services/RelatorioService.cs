@@ -1,5 +1,6 @@
 ﻿using CadastroLivros.Application.Interfaces;
 using CadastroLivros.Core.Models;
+using CadastroLivros.Core.Result;
 using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -20,9 +21,14 @@ public class RelatorioService
         _model = new DadosRelatorio();
     }
 
-    public async Task<Stream> GerarRelatorio()
+    public async Task<Result<StreamResponse>> GerarRelatorio()
     {
         var model = await _livroRepository.PesquisarLivroAutorRelatorio();
+
+        // if (model.Count == 0)
+        // {
+        //     return Error.NotFound("GerarRelatorio.NotFound", "Nenhum dado encontrado");
+        // }
 
         foreach (var item in model)
         {
@@ -58,26 +64,35 @@ public class RelatorioService
         }).ToList();
 
         _model.DadosAutor = dadosAutores;
-        var document = Document.Create(container =>
+
+        try
         {
-            container.Page(page =>
+            var document = Document.Create(container =>
             {
-                page.Size(PageSizes.A4.Landscape());
-                page.MarginHorizontal(30);
-                page.MarginVertical(15);
-                page.DefaultTextStyle(x => x.FontSize(12));
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4.Landscape());
+                    page.MarginHorizontal(30);
+                    page.MarginVertical(15);
+                    page.DefaultTextStyle(x => x.FontSize(12));
 
-                page.Header().PaddingBottom(10).Element(ComposeHeader);
-                page.Content().Element(ComposeContent);
-                page.Footer().Element(ComposeFooter);
+                    page.Header().PaddingBottom(10).Element(ComposeHeader);
+                    page.Content().Element(ComposeContent);
+                    page.Footer().Element(ComposeFooter);
+                });
             });
-        });
 
-        var stream = new MemoryStream();
-        document.GeneratePdf(stream);
-        stream.Position = 0;
+            var stream = new MemoryStream();
+            document.GeneratePdf(stream);
+            stream.Position = 0;
 
-        return stream;
+            return new StreamResponse("relatorio.pdf", "application/pdf", stream);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao gerar relatório");
+            return Error.Failure("GerarRelatorio.Failure", "Erro ao gerar relatório");
+        }
     }
 
     private void ComposeHeader(IContainer container)

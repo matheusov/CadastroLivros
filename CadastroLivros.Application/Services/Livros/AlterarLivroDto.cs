@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using CadastroLivros.Core.Enums;
 
-namespace CadastroLivros.Web.Models.Livros;
+namespace CadastroLivros.Application.Services.Livros;
 
-public class LivrosControllerViewModel : IValidatableObject
+public class AlterarLivroDto : IValidatableObject
 {
-    [Range(1, int.MaxValue)]
+    [Required, Range(1, int.MaxValue)]
     public int? CodL { get; set; }
 
     [Required(ErrorMessage = "Informe o título do livro")]
@@ -34,7 +34,7 @@ public class LivrosControllerViewModel : IValidatableObject
     [Required(ErrorMessage = "Informe o(s) assunto(s)")]
     public string? Assuntos { get; set; }
 
-    public List<FormaCompraViewModel> FormasCompra { get; set; } = [];
+    public List<AlterarLivroFormaCompraDto> FormasCompra { get; set; } = [];
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -66,7 +66,7 @@ public class LivrosControllerViewModel : IValidatableObject
     }
 }
 
-public class FormaCompraViewModel
+public class AlterarLivroFormaCompraDto
 {
     public FormaCompra FormaCompra { get; set; }
 

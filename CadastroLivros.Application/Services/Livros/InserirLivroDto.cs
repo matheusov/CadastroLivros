@@ -2,13 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using CadastroLivros.Core.Enums;
 
-namespace CadastroLivros.Web.Models.Livros;
+namespace CadastroLivros.Application.Services.Livros;
 
-public class LivrosControllerViewModel : IValidatableObject
+public class InserirLivroDto : IValidatableObject
 {
-    [Range(1, int.MaxValue)]
-    public int? CodL { get; set; }
-
     [Required(ErrorMessage = "Informe o título do livro")]
     [StringLength(40, ErrorMessage = "O título do livro deve ter no máximo 40 caracteres")]
     [DisplayName("Título")]
@@ -34,7 +31,7 @@ public class LivrosControllerViewModel : IValidatableObject
     [Required(ErrorMessage = "Informe o(s) assunto(s)")]
     public string? Assuntos { get; set; }
 
-    public List<FormaCompraViewModel> FormasCompra { get; set; } = [];
+    public List<InserirLivroFormaCompraDto> FormasCompra { get; set; } = [];
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -66,7 +63,7 @@ public class LivrosControllerViewModel : IValidatableObject
     }
 }
 
-public class FormaCompraViewModel
+public class InserirLivroFormaCompraDto
 {
     public FormaCompra FormaCompra { get; set; }
 

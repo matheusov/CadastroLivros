@@ -4,6 +4,7 @@ using CadastroLivros.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using CadastroLivros.Web.Models;
 using CadastroLivros.Web.Models.Home;
+using CadastroLivros.Web.Utilities;
 
 namespace CadastroLivros.Web.Controllers;
 
@@ -42,10 +43,16 @@ public class HomeController : Controller
         return View(model);
     }
 
-    public async Task<FileResult> BaixarRelatorio()
+    public async Task<IActionResult> BaixarRelatorio()
     {
-        var arquivo = await _relatorioService.GerarRelatorio();
-        return File(arquivo, "application/pdf", "relatorio.pdf");
+        var result = await _relatorioService.GerarRelatorio();
+        if (!result.TryGetValue(out var streamResponse, out var errors))
+        {
+            this.SetErrorResult("Erro ao gerar relatório: " + string.Join(", ", errors.Select(e => e.Description)));
+            return RedirectToAction("Index");
+        }
+
+        return File(streamResponse.Stream, streamResponse.ContentType, streamResponse.NomeArquivo);
     }
 
     public IActionResult Privacy()

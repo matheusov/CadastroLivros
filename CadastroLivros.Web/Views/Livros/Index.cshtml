@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Cadastrar livros";
-    string actionName = Model.CodL is null ? "Inserir" : "Editar";
+    string actionName = Model.CodL is null ? "Inserir" : "Alterar";
 }
 
 <div class="text-center">
@@ -45,12 +45,14 @@
         <div class="mb-3">
             <label class="form-label" asp-for="Autores"></label>
             <input class="form-control" asp-for="Autores"/>
+            <div class="form-text">Insira os nomes dos autores separando-os por vírgula</div>
             <span asp-validation-for="Autores" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label class="form-label" asp-for="Assuntos"></label>
             <input class="form-control" asp-for="Assuntos"/>
+            <div class="form-text">Insira os assuntos separando-os por vírgula</div>
             <span asp-validation-for="Assuntos" class="text-danger"></span>
         </div>
 
