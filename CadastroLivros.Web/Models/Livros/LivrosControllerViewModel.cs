@@ -4,7 +4,7 @@ using CadastroLivros.Core.Enums;
 
 namespace CadastroLivros.Web.Models.Livros;
 
-public class LivrosControllerViewModel
+public class LivrosControllerViewModel : IValidatableObject
 {
     [Range(1, int.MaxValue)]
     public int? CodL { get; set; }
@@ -29,14 +29,41 @@ public class LivrosControllerViewModel
     public string? AnoPublicacao { get; set; }
 
     [Required(ErrorMessage = "Informe o(s) autore(s)")]
-    [StringLength(40)]
     public string? Autores { get; set; }
 
     [Required(ErrorMessage = "Informe o(s) assunto(s)")]
-    [StringLength(40)]
     public string? Assuntos { get; set; }
 
     public List<FormaCompraViewModel> FormasCompra { get; set; } = [];
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        string[] autores = Autores!.Split(",");
+        var autoresDistintos = autores.Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct().ToList();
+
+        if (autoresDistintos.Count == 0)
+        {
+            yield return new ValidationResult("Informe o(s) autore(s)", new[] { nameof(Autores) });
+        }
+
+        if (autoresDistintos.Any(a => a.Length > 40))
+        {
+            yield return new ValidationResult("O nome do(s) autore(s) deve(m) ter no máximo 40 caracteres", new[] { nameof(Autores) });
+        }
+
+        string[] assuntos = Assuntos!.Split(",");
+        var assuntosDistintos = assuntos.Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct().ToList();
+
+        if (assuntosDistintos.Count == 0)
+        {
+            yield return new ValidationResult("Informe o(s) assunto(s)", new[] { nameof(Assuntos) });
+        }
+
+        if (assuntosDistintos.Any(a => a.Length > 40))
+        {
+            yield return new ValidationResult("A descrição do(s) assunto(s) deve(m) ter no máximo 40 caracteres", new[] { nameof(Assuntos) });
+        }
+    }
 }
 
 public class FormaCompraViewModel
