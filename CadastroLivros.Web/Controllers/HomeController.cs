@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using CadastroLivros.Core.Repositories;
-using CadastroLivros.Core.Services;
+using CadastroLivros.Application.Interfaces;
+using CadastroLivros.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using CadastroLivros.Web.Models;
 using CadastroLivros.Web.Models.Home;
@@ -10,16 +10,16 @@ namespace CadastroLivros.Web.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly LivroRepository _livroRepository;
-    private readonly AutorRepository _autorRepository;
-    private readonly AssuntoRepository _assuntoRepository;
+    private readonly ILivroRepository _livroRepository;
+    private readonly IAutorRepository _autorRepository;
+    private readonly IAssuntoRepository _assuntoRepository;
     private readonly RelatorioService _relatorioService;
 
     public HomeController(
         ILogger<HomeController> logger,
-        LivroRepository livroRepository,
-        AutorRepository autorRepository,
-        AssuntoRepository assuntoRepository,
+        ILivroRepository livroRepository,
+        IAutorRepository autorRepository,
+        IAssuntoRepository assuntoRepository,
         RelatorioService relatorioService
     )
     {

@@ -1,16 +1,16 @@
-﻿using CadastroLivros.Core.Models;
-using CadastroLivros.Core.Repositories;
+﻿using CadastroLivros.Application.Interfaces;
+using CadastroLivros.Core.Models;
 using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
 
-namespace CadastroLivros.Core.Services;
+namespace CadastroLivros.Application.Services;
 
 public class RelatorioService
 {
     private readonly ILogger<RelatorioService> _logger;
-    private readonly LivroRepository _livroRepository;
+    private readonly ILivroRepository _livroRepository;
 
-    public RelatorioService(ILogger<RelatorioService> logger, LivroRepository livroRepository)
+    public RelatorioService(ILogger<RelatorioService> logger, ILivroRepository livroRepository)
     {
         _logger = logger;
         _livroRepository = livroRepository;

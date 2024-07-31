@@ -1,12 +1,14 @@
 ﻿using System.Globalization;
+using CadastroLivros.Application.Interfaces;
+using CadastroLivros.Core;
 using CadastroLivros.Core.Entities;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 
-namespace CadastroLivros.Core.Repositories;
+namespace CadastroLivros.Infrastructure.Repositories;
 
-public class LivroValorRepository
+public class LivroValorRepository : ILivroValorRepository
 {
     private readonly IOptionsMonitor<AppSettings> _configuration;
 

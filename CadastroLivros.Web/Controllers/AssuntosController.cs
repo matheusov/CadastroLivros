@@ -1,4 +1,4 @@
-using CadastroLivros.Core.Repositories;
+using CadastroLivros.Application.Interfaces;
 using CadastroLivros.Web.Models.Assuntos;
 using CadastroLivros.Web.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -8,13 +8,13 @@ namespace CadastroLivros.Web.Controllers;
 public class AssuntosController : Controller
 {
     private readonly ILogger<AssuntosController> _logger;
-    private readonly AssuntoRepository _assuntoRepository;
-    private readonly LivroRepository _livroRepository;
+    private readonly IAssuntoRepository _assuntoRepository;
+    private readonly ILivroRepository _livroRepository;
 
     public AssuntosController(
         ILogger<AssuntosController> logger,
-        AssuntoRepository assuntoRepository,
-        LivroRepository livroRepository
+        IAssuntoRepository assuntoRepository,
+        ILivroRepository livroRepository
     )
     {
         _logger = logger;

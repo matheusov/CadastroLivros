@@ -1,19 +1,14 @@
-using CadastroLivros.Core.Repositories;
-using CadastroLivros.Core.Services;
+using CadastroLivros.Application.Services;
+using CadastroLivros.Core;
 using Microsoft.Extensions.DependencyInjection;
 using QuestPDF.Infrastructure;
 
-namespace CadastroLivros.Core;
+namespace CadastroLivros.Application;
 
 public static class DependencyInjectionRegister
 {
-    public static IServiceCollection AddCore(this IServiceCollection services, AppSettings configuration)
+    public static IServiceCollection AddApplication(this IServiceCollection services, AppSettings configuration)
     {
-        services.AddScoped<LivroRepository>();
-        services.AddScoped<AutorRepository>();
-        services.AddScoped<AssuntoRepository>();
-        services.AddScoped<LivroValorRepository>();
-
         services.AddScoped<RelatorioService>();
 
         QuestPDF.Settings.License = LicenseType.Community;

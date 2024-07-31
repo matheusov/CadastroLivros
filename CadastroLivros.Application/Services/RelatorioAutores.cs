@@ -3,7 +3,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace CadastroLivros.Core.Services;
+namespace CadastroLivros.Application.Services;
 
 public class RelatorioAutores
 {

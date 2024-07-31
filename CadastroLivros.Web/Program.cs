@@ -1,5 +1,7 @@
 using System.Globalization;
+using CadastroLivros.Application;
 using CadastroLivros.Core;
+using CadastroLivros.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,8 @@ builder.Services.AddOptions<AppSettings>()
 var appSettings = builder.Configuration.Get<AppSettings>()!;
 
 builder.Services
-    .AddCore(appSettings)
+    .AddApplication(appSettings)
+    .AddInfrastructure(appSettings)
     .AddControllersWithViews();
 
 var app = builder.Build();

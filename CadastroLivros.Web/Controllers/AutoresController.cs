@@ -1,4 +1,4 @@
-using CadastroLivros.Core.Repositories;
+using CadastroLivros.Application.Interfaces;
 using CadastroLivros.Web.Models.Autores;
 using CadastroLivros.Web.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -8,13 +8,13 @@ namespace CadastroLivros.Web.Controllers;
 public class AutoresController : Controller
 {
     private readonly ILogger<AutoresController> _logger;
-    private readonly AutorRepository _autorRepository;
-    private readonly LivroRepository _livroRepository;
+    private readonly IAutorRepository _autorRepository;
+    private readonly ILivroRepository _livroRepository;
 
     public AutoresController(
         ILogger<AutoresController> logger,
-        AutorRepository autorRepository,
-        LivroRepository livroRepository
+        IAutorRepository autorRepository,
+        ILivroRepository livroRepository
     )
     {
         _logger = logger;

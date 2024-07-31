@@ -1,6 +1,6 @@
+using CadastroLivros.Application.Interfaces;
 using CadastroLivros.Core.Entities;
 using CadastroLivros.Core.Enums;
-using CadastroLivros.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using CadastroLivros.Web.Models.Livros;
 using CadastroLivros.Web.Utilities;
@@ -10,17 +10,17 @@ namespace CadastroLivros.Web.Controllers;
 public class LivrosController : Controller
 {
     private readonly ILogger<LivrosController> _logger;
-    private readonly LivroRepository _livroRepository;
-    private readonly AutorRepository _autorRepository;
-    private readonly AssuntoRepository _assuntoRepository;
-    private readonly LivroValorRepository _livroValorRepository;
+    private readonly ILivroRepository _livroRepository;
+    private readonly IAutorRepository _autorRepository;
+    private readonly IAssuntoRepository _assuntoRepository;
+    private readonly ILivroValorRepository _livroValorRepository;
 
     public LivrosController(
         ILogger<LivrosController> logger,
-        LivroRepository livroRepository,
-        AutorRepository autorRepository,
-        AssuntoRepository assuntoRepository,
-        LivroValorRepository livroValorRepository
+        ILivroRepository livroRepository,
+        IAutorRepository autorRepository,
+        IAssuntoRepository assuntoRepository,
+        ILivroValorRepository livroValorRepository
     )
     {
         _logger = logger;

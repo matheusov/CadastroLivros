@@ -1,42 +1,44 @@
-﻿using CadastroLivros.Core.Entities;
+﻿using CadastroLivros.Application.Interfaces;
+using CadastroLivros.Core;
+using CadastroLivros.Core.Entities;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 
-namespace CadastroLivros.Core.Repositories;
+namespace CadastroLivros.Infrastructure.Repositories;
 
-public class AutorRepository
+public class AssuntoRepository : IAssuntoRepository
 {
     private readonly IOptionsMonitor<AppSettings> _configuration;
 
-    public AutorRepository(IOptionsMonitor<AppSettings> configuration)
+    public AssuntoRepository(IOptionsMonitor<AppSettings> configuration)
     {
         _configuration = configuration;
     }
 
-    public async Task<List<Autor>> Pesquisar()
+    public async Task<List<Assunto>> Pesquisar()
     {
         const string sql =
             """
-            SELECT a.CodAu, a.Nome
-            FROM Autor a
-            ORDER BY a.Nome
+            SELECT CodAs, Descricao
+            FROM Assunto
+            ORDER BY Descricao
             """;
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
-        var result = await connection.QueryAsync<Autor>(sql);
+        var result = await connection.QueryAsync<Assunto>(sql);
         return result.AsList();
     }
 
-    public async Task<List<Autor>> PesquisarPorLivro(int codL)
+    public async Task<List<Assunto>> PesquisarPorLivro(int codL)
     {
         const string sql =
             """
             SELECT
-              a.CodAu
-              ,a.Nome
-            FROM Autor a
-            INNER JOIN Livro_Autor la ON la.Autor_CodAu = a.CodAu
+              a.CodAs
+              ,a.Descricao
+            FROM Assunto a
+            INNER JOIN Livro_Assunto la ON la.Assunto_CodAs = a.CodAs
             WHERE la.Livro_CodL = @CodL
             """;
 
@@ -44,77 +46,77 @@ public class AutorRepository
         parameters.Add("@CodL", codL);
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
-        var result = await connection.QueryAsync<Autor>(sql, parameters);
+        var result = await connection.QueryAsync<Assunto>(sql, parameters);
         return result.AsList();
     }
 
-    public async Task<Autor?> PesquisarPorId(int id)
+    public async Task<Assunto?> PesquisarPorId(int id)
     {
         const string sql =
             """
             SELECT
-              a.CodAu
-              ,a.Nome
-            FROM Autor a
-            WHERE a.CodAu = @CodAu
+              a.CodAs
+              ,a.Descricao
+            FROM Assunto a
+            WHERE a.CodAs = @CodAs
             """;
 
         var parameters = new DynamicParameters();
-        parameters.Add("@CodAu", id);
+        parameters.Add("@CodAs", id);
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
-        var result = await connection.QueryFirstOrDefaultAsync<Autor>(sql, parameters);
+        var result = await connection.QueryFirstOrDefaultAsync<Assunto>(sql, parameters);
         return result;
     }
 
-    public async Task<Autor?> PesquisarPorNome(string nome)
+    public async Task<Assunto?> PesquisarPorDescricao(string descricao)
     {
         const string sql =
             """
             SELECT
-              a.CodAu
-              ,a.Nome
-            FROM Autor a
-            WHERE a.Nome LIKE @Nome
+              a.CodAs
+              ,a.Descricao
+            FROM Assunto a
+            WHERE a.Descricao LIKE @Descricao
             """;
 
         var parameters = new DynamicParameters();
-        parameters.Add("@Nome", nome);
+        parameters.Add("@Descricao", descricao);
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
-        var result = await connection.QueryFirstOrDefaultAsync<Autor>(sql, parameters);
+        var result = await connection.QueryFirstOrDefaultAsync<Assunto>(sql, parameters);
         return result;
     }
 
-    public async Task<int> Inserir(Autor autor)
+    public async Task<int> Inserir(Assunto autor)
     {
         const string sql =
             """
-            INSERT INTO Autor (Nome)
-            VALUES (@Nome);
+            INSERT INTO Assunto (Descricao)
+            VALUES (@Descricao);
 
             SELECT LAST_INSERT_ROWID();
             """;
 
         var parameters = new DynamicParameters();
-        parameters.Add("@Nome", autor.Nome);
+        parameters.Add("@Descricao", autor.Descricao);
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
         return await connection.ExecuteScalarAsync<int>(sql, parameters);
     }
 
-    public async Task<int> Alterar(Autor autor)
+    public async Task<int> Alterar(Assunto autor)
     {
         const string sql =
             """
-            UPDATE Autor
-            SET Nome = @Nome
-            WHERE CodAu = @CodAu
+            UPDATE Assunto
+            SET Descricao = @Descricao
+            WHERE CodAs = @CodAs
             """;
 
         var parameters = new DynamicParameters();
-        parameters.Add("@CodAu", autor.CodAu);
-        parameters.Add("@Nome", autor.Nome);
+        parameters.Add("@CodAs", autor.CodAs);
+        parameters.Add("@Descricao", autor.Descricao);
 
         await using var connection = new SqliteConnection(_configuration.CurrentValue.ConnectionStrings.DefaultConnection);
         return await connection.ExecuteAsync(sql, parameters);
