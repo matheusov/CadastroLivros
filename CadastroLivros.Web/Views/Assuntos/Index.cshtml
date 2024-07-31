@@ -32,12 +32,20 @@
                             <a asp-controller="Livros" asp-action="Index" asp-route-id="@Model.Livros[i].CodL">@Model.Livros[i].Titulo</a>
                         </td>
                         <td>@Model.Livros[i].Editora</td>
-                        <td>@Model.Livros[i].Edicao</td>
+                        <td>@(Model.Livros[i].Edicao)ª</td>
                         <td>@Model.Livros[i].AnoPublicacao</td>
                         <td>@Model.Livros[i].Autores</td>
                         <td>@Model.Livros[i].Assuntos</td>
                     </tr>
                 }
+
+                @if (Model.Livros.Count == 0)
+                {
+                    <tr class="text-center">
+                        <td colspan="6" class="text-center">Nenhum registro encontrado</td>
+                    </tr>
+                }
+
                 </tbody>
             </table>
         </div>
